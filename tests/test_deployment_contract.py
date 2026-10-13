@@ -34,6 +34,8 @@ def test_render_blueprint_uses_free_plan_healthcheck_and_safe_environment():
     assert environment["IP_HASH_SECRET"]["generateValue"] is True
     assert environment["TURNSTILE_SECRET_KEY"]["sync"] is False
     assert environment["OUTPUT_DIR"]["value"].startswith("/tmp/")
+    assert environment["MAX_TEXT_CHARS"]["value"] == "5000"
+    assert environment["DAILY_CHARACTER_LIMIT"]["value"] == "50000"
     assert "PORT" not in environment
 
 

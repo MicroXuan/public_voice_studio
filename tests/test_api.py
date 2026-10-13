@@ -138,6 +138,16 @@ def test_job_creation_returns_202_location_and_pollable_state(tmp_path):
     assert polled.json()["id"] == body["id"]
 
 
+def test_job_creation_accepts_5000_characters_and_rejects_5001(tmp_path):
+    app, _, _ = app_bundle(tmp_path)
+    with TestClient(app) as client:
+        rejected = client.post("/api/jobs", json=payload(text="字" * 5_001))
+        accepted = client.post("/api/jobs", json=payload(text="字" * 5_000))
+
+    assert rejected.status_code == 422
+    assert accepted.status_code == 202
+
+
 def test_audio_supports_inline_and_download_dispositions(tmp_path):
     app, jobs, _ = app_bundle(tmp_path)
     with TestClient(app) as client:

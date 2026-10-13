@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
 DIST = ROOT / "dist"
-PUBLIC_ASSETS = {"index.html", "styles.css", "app.js", "lib.js", "config.js"}
+PUBLIC_ASSETS = {"index.html", "styles.css", "app.js", "lib.js", "config.js", "favicon.png"}
 
 
 def digest(path: Path) -> str:
@@ -42,7 +42,7 @@ def test_build_requires_api_base_url(monkeypatch):
 def test_build_copies_only_public_assets_and_preserves_sources():
     source_files = [
         ROOT / "frontend" / name
-        for name in ("index.html", "styles.css", "app.js", "lib.js", "config.template.js")
+        for name in ("index.html", "styles.css", "app.js", "lib.js", "config.template.js", "favicon.png")
     ]
     before = {path: digest(path) for path in source_files}
     env = os.environ.copy()
@@ -60,10 +60,11 @@ def test_build_copies_only_public_assets_and_preserves_sources():
     assert result.returncode == 0, result.stderr
     assert {path.name for path in DIST.iterdir()} == PUBLIC_ASSETS
     assert {path: digest(path) for path in source_files} == before
+    assert digest(DIST / "favicon.png") == digest(ROOT / "frontend" / "favicon.png")
     config = (DIST / "config.js").read_text()
     assert json.dumps("https://api.voice.example.com") in config
     assert json.dumps("public-site-key") in config
-    combined = "\n".join(path.read_text() for path in DIST.iterdir())
+    combined = "\n".join(path.read_text() for path in DIST.iterdir() if path.suffix != ".png")
     assert "must-never-be-emitted" not in combined
     assert "also-never-public" not in combined
     assert "process.env" not in combined

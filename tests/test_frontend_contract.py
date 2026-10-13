@@ -49,6 +49,18 @@ def test_page_has_brand_semantics_and_no_forbidden_copy():
     assert not re.search(r"[😀-🙏🌀-🫿]", html)
 
 
+def test_page_uses_supplied_favicon_and_displays_current_free_limits():
+    html = HTML_PATH.read_text()
+    favicon = ROOT / "frontend" / "favicon.png"
+
+    assert favicon.is_file()
+    assert '<link rel="icon" type="image/png" href="./favicon.png" />' in html
+    assert '<textarea id="source-text" maxlength="5000"' in html
+    assert "5,000 字符" in html
+    assert "50,000 字符" in html
+    assert "0 / 5,000" in html
+
+
 def test_page_discloses_unofficial_provider_and_prohibits_abuse():
     html = HTML_PATH.read_text()
 

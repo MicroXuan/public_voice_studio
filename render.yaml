@@ -15,6 +15,10 @@ services:
         value: production
       - key: OUTPUT_DIR
         value: /tmp/xiaoxuan-voice-audio
+      - key: MAX_TEXT_CHARS
+        value: "5000"
+      - key: DAILY_CHARACTER_LIMIT
+        value: "50000"
       - key: ALLOWED_ORIGINS
         sync: false
       - key: IP_HASH_SECRET

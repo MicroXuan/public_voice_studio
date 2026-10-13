@@ -6,6 +6,7 @@
     <meta name="description" content="小宣 Voice Studio：选择在线语音，把文字生成可试听、可下载的 MP3。" />
     <meta name="color-scheme" content="light" />
     <title>小宣 Voice Studio — 文本转语音</title>
+    <link rel="icon" type="image/png" href="./favicon.png" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -37,8 +38,8 @@
           <p class="intro-copy">从 8 个常用地区的精选语音中挑选声音，调整语速与语调，生成可试听、可下载的 MP3。</p>
         </div>
         <dl class="limit-note" aria-label="免费额度">
-          <div><dt>单次上限</dt><dd>10,000 字符</dd></div>
-          <div><dt>每日额度</dt><dd>30,000 字符</dd></div>
+          <div><dt>单次上限</dt><dd>5,000 字符</dd></div>
+          <div><dt>每日额度</dt><dd>50,000 字符</dd></div>
         </dl>
       </section>
 
@@ -55,10 +56,10 @@
             </button>
           </div>
           <label class="sr-only" for="source-text">要转换为语音的文本</label>
-          <textarea id="source-text" maxlength="10000" rows="13" placeholder="粘贴文章、课程讲稿、视频旁白或通知内容…"></textarea>
+          <textarea id="source-text" maxlength="5000" rows="13" placeholder="粘贴文章、课程讲稿、视频旁白或通知内容…"></textarea>
           <div class="editor-meta">
             <span>文本会在生成完成后随临时任务自动清理</span>
-            <output id="character-count" for="source-text">0 / 10,000</output>
+            <output id="character-count" for="source-text">0 / 5,000</output>
           </div>
         </section>
 

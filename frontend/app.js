@@ -72,8 +72,8 @@ function setProgress(value, visible = true) {
 
 function updateCharacterCount() {
   const length = Array.from(elements.sourceText.value).length;
-  elements.characterCount.textContent = `${length.toLocaleString("zh-CN")} / 10,000`;
-  elements.characterCount.classList.toggle("is-limit", length >= 10_000);
+  elements.characterCount.textContent = `${length.toLocaleString("zh-CN")} / 5,000`;
+  elements.characterCount.classList.toggle("is-limit", length >= 5_000);
 }
 
 function fillSelect(select, values, defaultLabel, preferredValue = "") {

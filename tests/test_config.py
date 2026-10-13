@@ -21,9 +21,9 @@ def test_settings_defaults_are_safe_for_public_free_tier(monkeypatch):
 
     settings = Settings.from_env()
 
-    assert settings.max_text_chars == 10_000
+    assert settings.max_text_chars == 5_000
     assert settings.hourly_request_limit == 10
-    assert settings.daily_character_limit == 30_000
+    assert settings.daily_character_limit == 50_000
     assert settings.synthesis_workers == 2
     assert settings.queue_maxsize == 8
     assert settings.audio_retention_seconds == 3_600

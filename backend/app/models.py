@@ -21,7 +21,7 @@ class VoiceOption(PublicModel):
 
 
 class SynthesisRequest(PublicModel):
-    text: str = Field(min_length=1, max_length=10_000)
+    text: str = Field(min_length=1, max_length=5_000)
     voice: str = Field(min_length=1, max_length=160)
     rate: int = Field(default=0, ge=-50, le=50)
     pitch: int = Field(default=0, ge=-50, le=50)

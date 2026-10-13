@@ -45,10 +45,10 @@ class Settings:
 
     app_name: str = "小宣 Voice Studio"
     environment: str = "development"
-    max_text_chars: int = 10_000
+    max_text_chars: int = 5_000
     max_request_bytes: int = 64_000
     hourly_request_limit: int = 10
-    daily_character_limit: int = 30_000
+    daily_character_limit: int = 50_000
     synthesis_workers: int = 2
     queue_maxsize: int = 8
     audio_retention_seconds: int = 3_600
@@ -64,10 +64,10 @@ class Settings:
         return cls(
             app_name=os.getenv("APP_NAME", "小宣 Voice Studio").strip() or "小宣 Voice Studio",
             environment=os.getenv("ENVIRONMENT", "development").strip() or "development",
-            max_text_chars=_positive_int("MAX_TEXT_CHARS", 10_000),
+            max_text_chars=_positive_int("MAX_TEXT_CHARS", 5_000),
             max_request_bytes=_positive_int("MAX_REQUEST_BYTES", 64_000),
             hourly_request_limit=_positive_int("HOURLY_REQUEST_LIMIT", 10),
-            daily_character_limit=_positive_int("DAILY_CHARACTER_LIMIT", 30_000),
+            daily_character_limit=_positive_int("DAILY_CHARACTER_LIMIT", 50_000),
             synthesis_workers=_positive_int("SYNTHESIS_WORKERS", 2),
             queue_maxsize=_positive_int("QUEUE_MAXSIZE", 8),
             audio_retention_seconds=_positive_int("AUDIO_RETENTION_SECONDS", 3_600),
