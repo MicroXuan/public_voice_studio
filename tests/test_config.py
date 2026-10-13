@@ -78,3 +78,15 @@ def test_secret_fields_are_hidden_from_repr(monkeypatch):
         and field.repr is False
     }
     assert hidden == {"client_identity_secret", "turnstile_secret_key"}
+
+
+def test_deployment_environment_names_take_precedence(monkeypatch):
+    monkeypatch.setenv("ALLOWED_ORIGINS", "https://official.example")
+    monkeypatch.setenv("CORS_ORIGINS", "https://legacy.example")
+    monkeypatch.setenv("IP_HASH_SECRET", "deployment-secret")
+    monkeypatch.setenv("CLIENT_IDENTITY_SECRET", "legacy-secret")
+
+    settings = Settings.from_env()
+
+    assert settings.cors_origins == ("https://official.example",)
+    assert settings.client_identity_secret == "deployment-secret"

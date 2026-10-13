@@ -31,7 +31,9 @@ def _positive_int(name: str, default: int) -> int:
 
 
 def _origins_from_env() -> tuple[str, ...]:
-    raw = os.getenv("CORS_ORIGINS")
+    raw = os.getenv("ALLOWED_ORIGINS")
+    if raw is None:
+        raw = os.getenv("CORS_ORIGINS")
     if raw is None:
         return DEFAULT_CORS_ORIGINS
     return tuple(dict.fromkeys(item.strip().rstrip("/") for item in raw.split(",") if item.strip()))
@@ -72,7 +74,9 @@ class Settings:
             voice_cache_ttl_seconds=_positive_int("VOICE_CACHE_TTL_SECONDS", 3_600),
             output_dir=Path(os.getenv("OUTPUT_DIR", "runtime/audio")),
             cors_origins=_origins_from_env(),
-            client_identity_secret=_optional("CLIENT_IDENTITY_SECRET"),
+            client_identity_secret=(
+                _optional("IP_HASH_SECRET") or _optional("CLIENT_IDENTITY_SECRET")
+            ),
             turnstile_secret_key=_optional("TURNSTILE_SECRET_KEY"),
             turnstile_site_key=_optional("TURNSTILE_SITE_KEY"),
         )

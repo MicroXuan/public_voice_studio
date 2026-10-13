@@ -1,0 +1,26 @@
+services:
+  - type: web
+    runtime: docker
+    name: xiaoxuan-voice-api
+    repo: https://github.com/MicroXuan/public_voice_studio
+    branch: main
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: OUTPUT_DIR
+        value: /tmp/xiaoxuan-voice-audio
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: IP_HASH_SECRET
+        generateValue: true
+      - key: TURNSTILE_SECRET_KEY
+        sync: false
+      - key: FORWARDED_ALLOW_IPS
+        value: "*"

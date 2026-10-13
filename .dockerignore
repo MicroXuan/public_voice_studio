@@ -1,0 +1,17 @@
+.git
+.github
+.venv
+.pytest_cache
+.superpowers
+__pycache__
+*.pyc
+.DS_Store
+.env
+dist
+frontend
+tests
+docs
+design-system
+runtime
+*.mp3
+*.mp3.part
