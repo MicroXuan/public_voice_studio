@@ -28,6 +28,7 @@ def test_render_blueprint_uses_free_plan_healthcheck_and_safe_environment():
     assert service["runtime"] == "docker"
     assert service["plan"] == "free"
     assert service["healthCheckPath"] == "/healthz"
+    assert "maxShutdownDelaySeconds" not in service
     environment = {item["key"]: item for item in service["envVars"]}
     assert environment["ALLOWED_ORIGINS"]["sync"] is False
     assert environment["IP_HASH_SECRET"]["generateValue"] is True
