@@ -64,6 +64,10 @@ Render Free 闲置后会休眠，冷启动可能接近 1 分钟。前端会自�
 
 构建脚本只把公开资源复制到 `dist`，并只注入 API URL 与公开的 Turnstile site key。任何私钥都不会进入前端产物。
 
+### 访问统计
+
+在 Pages 项目进入 **Metrics > Web Analytics > Enable**。Cloudflare 会在下一次部署时自动注入统计脚本，无需在仓库中保存站点令牌；访问量、访客数和页面性能只在 Cloudflare 控制台中查看，不在公开页面显示。
+
 ## 3. 绑定自定义域名
 
 ### 前端主域名

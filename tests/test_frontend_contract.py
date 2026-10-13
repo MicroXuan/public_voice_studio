@@ -144,3 +144,12 @@ def test_public_catalog_dropdowns_and_result_navigation_are_intentional():
     assert "scrollIntoView" in javascript
     assert "prefers-reduced-motion: reduce" in javascript
     assert "scroll-margin-top" in css
+
+
+def test_desktop_workspace_uses_compact_vertical_rhythm():
+    css = CSS_PATH.read_text()
+
+    assert re.search(r"\.site-header\s*\{[^}]*min-height:\s*64px", css, re.S)
+    assert re.search(r"\.intro\s*\{[^}]*padding:\s*18px 14px 18px", css, re.S)
+    assert re.search(r"#source-text\s*\{[^}]*min-height:\s*220px", css, re.S)
+    assert re.search(r"\.voice-card\s*\{[^}]*min-height:\s*620px", css, re.S)

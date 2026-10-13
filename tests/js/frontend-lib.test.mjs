@@ -10,7 +10,9 @@ import {
   loadFavorites,
   normalizeApiBase,
   pickDefaultVoice,
+  pickSelectValue,
   toggleFavorite,
+  voiceDisplayName,
 } from "../../frontend/lib.js";
 
 const voices = [
@@ -56,6 +58,21 @@ test("search is accent and case insensitive across names and locale", () => {
   assert.equal(filterVoices(voices, { query: "不存在" }).length, 0);
 });
 
+test("Chinese voice names are localized and remain searchable by Chinese or romanized name", () => {
+  const yunxi = {
+    short_name: "zh-CN-YunxiNeural",
+    friendly_name: "Microsoft Yunxi Online",
+    local_name: "Yunxi",
+    locale: "zh-CN",
+    gender: "Male",
+  };
+
+  assert.equal(voiceDisplayName(yunxi), "云希");
+  assert.equal(voiceDisplayName(voices[0]), "Dénise");
+  assert.deepEqual(filterVoices([yunxi], { query: "云希" }), [yunxi]);
+  assert.deepEqual(filterVoices([yunxi], { query: "yunxi" }), [yunxi]);
+});
+
 test("filters language region and gender while sorting favorites first stably", () => {
   const repeated = [voices[0], voices[1], voices[2], { ...voices[2], short_name: "en-GB-RyanNeural", locale: "en-GB" }];
   const result = filterVoices(repeated, {
@@ -98,6 +115,15 @@ test("keeps a valid selection and otherwise prefers the reliable Chinese default
   assert.equal(pickDefaultVoice(voices, "missing"), "zh-CN-XiaoxiaoNeural");
   assert.equal(pickDefaultVoice([voices[0]], ""), "fr-FR-DeniseNeural");
   assert.equal(pickDefaultVoice([], ""), "");
+});
+
+test("select defaults to China while preserving an existing valid choice", () => {
+  const regions = [{ code: "AR" }, { code: "CN" }, { code: "US" }];
+
+  assert.equal(pickSelectValue(regions, "", "CN"), "CN");
+  assert.equal(pickSelectValue(regions, "US", "CN"), "US");
+  assert.equal(pickSelectValue(regions, "missing", "CN"), "CN");
+  assert.equal(pickSelectValue(regions, "", "missing"), "");
 });
 
 test("handles hundreds of voices, long names and empty results without mutation", () => {

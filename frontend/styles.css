@@ -79,7 +79,7 @@ button, input, select, textarea, a {
 
 .site-header {
   width: min(1440px, calc(100% - 48px));
-  min-height: 76px;
+  min-height: 64px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -127,7 +127,7 @@ button, input, select, textarea, a {
   align-items: end;
   justify-content: space-between;
   gap: 40px;
-  padding: 34px 14px 24px;
+  padding: 18px 14px 18px;
 }
 
 .eyebrow, .section-kicker {
@@ -174,7 +174,7 @@ h1 { max-width: 740px; margin-bottom: 12px; font-size: clamp(28px, 3.5vw, 48px);
   box-shadow: var(--shadow-card);
 }
 .editor-card { grid-area: editor; }
-.voice-card { grid-area: voices; display: flex; min-height: 680px; flex-direction: column; }
+.voice-card { grid-area: voices; display: flex; min-height: 620px; flex-direction: column; }
 .parameter-card { grid-area: parameters; }
 .action-card { grid-area: action; }
 .result-card { grid-area: result; scroll-margin-top: 20px; }
@@ -201,7 +201,7 @@ h1 { max-width: 740px; margin-bottom: 12px; font-size: clamp(28px, 3.5vw, 48px);
 #source-text {
   display: block;
   width: 100%;
-  min-height: 250px;
+  min-height: 220px;
   resize: vertical;
   padding: 18px;
   border: 1px solid #d9deea;
@@ -248,7 +248,7 @@ select {
 .favorite-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin: 8px 0 4px; cursor: pointer; color: #475569; }
 .favorite-toggle input { width: 17px; height: 17px; accent-color: var(--color-primary); }
 
-.voice-list { display: grid; align-content: start; gap: 8px; flex: 1; min-height: 260px; max-height: 510px; margin-top: 6px; padding-right: 4px; overflow: auto; scrollbar-color: #cbd2df transparent; }
+.voice-list { display: grid; align-content: start; gap: 8px; flex: 1; min-height: 260px; max-height: 450px; margin-top: 6px; padding-right: 4px; overflow: auto; scrollbar-color: #cbd2df transparent; }
 .voice-option {
   display: grid;
   grid-template-columns: 39px minmax(0, 1fr) 44px;
@@ -338,9 +338,9 @@ footer { padding: 28px 20px 38px; color: #8490a3; font-size: 11px; text-align: c
 
 @media (max-width: 768px) {
   .site-header, .page-shell { width: min(100% - 24px, 720px); }
-  .site-header { min-height: 68px; }
+  .site-header { min-height: 64px; }
   .service-note { font-size: 11px; }
-  .intro { display: block; padding: 30px 2px 22px; }
+  .intro { display: block; padding: 20px 2px 18px; }
   .intro-copy { font-size: 14px; }
   .limit-note { margin-top: 20px; }
   .workspace-grid {
@@ -352,7 +352,7 @@ footer { padding: 28px 20px 38px; color: #8490a3; font-size: 11px; text-align: c
   .voice-card { min-height: 0; }
   .voice-list { max-height: 480px; }
   .range-grid { grid-template-columns: 1fr; }
-  #source-text { min-height: 260px; }
+  #source-text { min-height: 230px; }
 }
 
 @media (max-width: 480px) {

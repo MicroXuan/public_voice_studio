@@ -7,7 +7,9 @@ import {
   loadFavorites,
   normalizeApiBase,
   pickDefaultVoice,
+  pickSelectValue,
   toggleFavorite,
+  voiceDisplayName,
 } from "./lib.js";
 
 const config = window.XUAN_VOICE_CONFIG || {};
@@ -74,19 +76,19 @@ function updateCharacterCount() {
   elements.characterCount.classList.toggle("is-limit", length >= 10_000);
 }
 
-function fillSelect(select, values, defaultLabel) {
+function fillSelect(select, values, defaultLabel, preferredValue = "") {
   const current = select.value;
   select.replaceChildren(new Option(defaultLabel, ""));
   for (const item of values) {
     select.add(new Option(item.label, item.code));
   }
-  if ([...select.options].some((option) => option.value === current)) select.value = current;
+  select.value = pickSelectValue(values, current, preferredValue);
 }
 
 function renderFilters() {
   const groups = groupLocales(state.voices, "zh-CN");
   fillSelect(elements.language, groups.languages, "全部语言");
-  fillSelect(elements.region, groups.regions, "全部地区");
+  fillSelect(elements.region, groups.regions, "全部地区", "CN");
 }
 
 function voiceGlyph() {
@@ -125,16 +127,18 @@ function renderVoiceList() {
     const copy = document.createElement("span");
     copy.className = "voice-copy";
     const name = document.createElement("strong");
-    name.textContent = voice.local_name;
+    const displayName = voiceDisplayName(voice);
+    name.textContent = displayName;
     const details = document.createElement("small");
-    details.textContent = `${voice.locale} · ${voice.gender === "Female" ? "女声" : voice.gender === "Male" ? "男声" : voice.gender}`;
+    const romanizedName = voice.local_name && voice.local_name !== displayName ? `${voice.local_name} · ` : "";
+    details.textContent = `${romanizedName}${voice.locale} · ${voice.gender === "Female" ? "女声" : voice.gender === "Male" ? "男声" : voice.gender}`;
     copy.append(name, details);
 
     const favorite = document.createElement("button");
     favorite.type = "button";
     favorite.className = `favorite-button${state.favorites.has(voice.short_name) ? " is-favorite" : ""}`;
     favorite.dataset.favorite = voice.short_name;
-    favorite.setAttribute("aria-label", `${state.favorites.has(voice.short_name) ? "取消收藏" : "收藏"}${voice.local_name}`);
+    favorite.setAttribute("aria-label", `${state.favorites.has(voice.short_name) ? "取消收藏" : "收藏"}${displayName}`);
     favorite.append(favoriteIcon());
     option.append(voiceGlyph(), copy, favorite);
     fragment.append(option);

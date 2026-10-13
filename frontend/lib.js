@@ -1,5 +1,22 @@
 const FAVORITES_KEY = "xiaoxuan-voice-studio:favorites";
 
+const CHINESE_VOICE_NAMES = Object.freeze({
+  "zh-CN-XiaoxiaoNeural": "晓晓",
+  "zh-CN-XiaoyiNeural": "晓伊",
+  "zh-CN-YunjianNeural": "云健",
+  "zh-CN-YunxiNeural": "云希",
+  "zh-CN-YunxiaNeural": "云夏",
+  "zh-CN-YunyangNeural": "云扬",
+  "zh-CN-liaoning-XiaobeiNeural": "晓北",
+  "zh-CN-shaanxi-XiaoniNeural": "晓妮",
+  "zh-HK-HiuGaaiNeural": "曉佳",
+  "zh-HK-HiuMaanNeural": "曉曼",
+  "zh-HK-WanLungNeural": "雲龍",
+  "zh-TW-HsiaoChenNeural": "曉臻",
+  "zh-TW-HsiaoYuNeural": "曉雨",
+  "zh-TW-YunJheNeural": "雲哲",
+});
+
 function pageBase(fallback) {
   if (fallback) return fallback;
   if (typeof window !== "undefined" && window.location) return window.location.href;
@@ -36,6 +53,10 @@ function localeParts(locale) {
   }
 }
 
+export function voiceDisplayName(voice) {
+  return CHINESE_VOICE_NAMES[voice?.short_name] || voice?.local_name || voice?.short_name || "";
+}
+
 export function filterVoices(voices, filters = {}) {
   const query = fold(filters.query).trim();
   const language = String(filters.language || "").toLowerCase();
@@ -48,6 +69,7 @@ export function filterVoices(voices, filters = {}) {
     .filter(({ voice }) => {
       const parts = localeParts(voice.locale);
       const searchable = fold([
+        voiceDisplayName(voice),
         voice.short_name,
         voice.friendly_name,
         voice.local_name,
@@ -81,6 +103,12 @@ export function pickDefaultVoice(voices, current, preferred = "zh-CN-XiaoxiaoNeu
   if (voices.some((voice) => voice.short_name === current)) return current;
   if (voices.some((voice) => voice.short_name === preferred)) return preferred;
   return voices[0]?.short_name || "";
+}
+
+export function pickSelectValue(values, current, preferred = "") {
+  if (values.some((item) => item.code === current)) return current;
+  if (values.some((item) => item.code === preferred)) return preferred;
+  return "";
 }
 
 function displayName(type, code, displayLocale) {
