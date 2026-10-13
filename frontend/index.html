@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="小宣 Voice Studio：选择在线语音，把文字生成可试听、可下载的 MP3。" />
+    <meta name="color-scheme" content="light" />
+    <title>小宣 Voice Studio — 文本转语音</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace-main">跳到创作工作台</a>
+
+    <header class="site-header" aria-label="网站页眉">
+      <a class="brand" href="./" aria-label="小宣 Voice Studio 首页">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" focusable="false">
+            <path d="M7 21h4l2-8 4 16 5-21 4 25 3-12h4" />
+          </svg>
+        </span>
+        <span>
+          <strong>小宣</strong>
+          <small>Voice Studio</small>
+        </span>
+      </a>
+      <div class="service-note" aria-label="服务说明">
+        <span class="service-dot" aria-hidden="true"></span>
+        免费体验 · 无需登录
+      </div>
+    </header>
+
+    <main id="workspace-main" class="page-shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">TEXT TO VOICE</p>
+          <h1 id="page-title">让文字，拥有恰到好处的声音。</h1>
+          <p class="intro-copy">从完整语音目录中挑选声音，调整语速与语调，生成可试听、可下载的 MP3。</p>
+        </div>
+        <dl class="limit-note" aria-label="免费额度">
+          <div><dt>单次上限</dt><dd>10,000 字符</dd></div>
+          <div><dt>每日额度</dt><dd>30,000 字符</dd></div>
+        </dl>
+      </section>
+
+      <div class="workspace-grid" aria-label="文本转语音工作台">
+        <section class="studio-card editor-card" aria-labelledby="editor-title">
+          <div class="section-heading editor-heading">
+            <div>
+              <p class="section-kicker">01 · 文本</p>
+              <h2 id="editor-title">输入要朗读的内容</h2>
+            </div>
+            <button id="clear-text" class="icon-text-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5" /></svg>
+              清空
+            </button>
+          </div>
+          <label class="sr-only" for="source-text">要转换为语音的文本</label>
+          <textarea id="source-text" maxlength="10000" rows="13" placeholder="粘贴文章、课程讲稿、视频旁白或通知内容…"></textarea>
+          <div class="editor-meta">
+            <span>文本会在生成完成后随临时任务自动清理</span>
+            <output id="character-count" for="source-text">0 / 10,000</output>
+          </div>
+        </section>
+
+        <aside class="studio-card voice-card" aria-labelledby="voice-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">02 · 声音</p>
+              <h2 id="voice-title">选择朗读声音</h2>
+            </div>
+            <span id="voice-count" class="count-label" aria-live="polite">正在载入</span>
+          </div>
+
+          <div class="search-field">
+            <label for="voice-search">搜索声音</label>
+            <div class="input-with-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
+              <input id="voice-search" type="search" autocomplete="off" placeholder="名称、语言或地区" />
+            </div>
+          </div>
+
+          <div class="filter-grid">
+            <div>
+              <label for="language-filter">语言</label>
+              <select id="language-filter"><option value="">全部语言</option></select>
+            </div>
+            <div>
+              <label for="region-filter">地区</label>
+              <select id="region-filter"><option value="">全部地区</option></select>
+            </div>
+            <div>
+              <label for="gender-filter">声音</label>
+              <select id="gender-filter">
+                <option value="">全部声音</option>
+                <option value="Female">女声</option>
+                <option value="Male">男声</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="favorite-toggle" for="favorites-only">
+            <input id="favorites-only" type="checkbox" />
+            <span>只看收藏</span>
+          </label>
+
+          <div id="voice-list" class="voice-list" role="listbox" aria-label="可用声音" aria-busy="true"></div>
+          <p id="voice-empty" class="empty-message" hidden>没有匹配的声音，试试减少筛选条件。</p>
+        </aside>
+
+        <section class="studio-card parameter-card" aria-labelledby="parameter-title">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="section-kicker">03 · 调整</p>
+              <h2 id="parameter-title">声音参数</h2>
+            </div>
+            <button id="reset-controls" class="quiet-button" type="button">恢复默认</button>
+          </div>
+          <div class="range-grid">
+            <div class="range-control">
+              <div class="range-label"><label for="rate-control">语速</label><output id="rate-value" for="rate-control">0%</output></div>
+              <input id="rate-control" type="range" min="-50" max="50" value="0" />
+              <div class="range-scale"><span>舒缓</span><span>轻快</span></div>
+            </div>
+            <div class="range-control">
+              <div class="range-label"><label for="pitch-control">音调</label><output id="pitch-value" for="pitch-control">0 Hz</output></div>
+              <input id="pitch-control" type="range" min="-50" max="50" value="0" />
+              <div class="range-scale"><span>低沉</span><span>明亮</span></div>
+            </div>
+            <div class="range-control">
+              <div class="range-label"><label for="volume-control">音量</label><output id="volume-value" for="volume-control">0%</output></div>
+              <input id="volume-control" type="range" min="-50" max="50" value="0" />
+              <div class="range-scale"><span>轻柔</span><span>响亮</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="action-card" aria-label="生成操作">
+          <div id="turnstile-container" class="turnstile-container" hidden></div>
+          <button id="generate-button" class="generate-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12v3m4-8v10m4-13v16m4-11v6m4-4v2" /></svg>
+            <span>生成语音</span>
+          </button>
+          <p>免费服务在闲置后需要短暂唤醒，首次生成可能等待约 1 分钟。</p>
+        </section>
+
+        <section id="result-card" class="studio-card result-card" aria-labelledby="result-title">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="section-kicker">04 · 结果</p>
+              <h2 id="result-title">试听与下载</h2>
+            </div>
+            <span id="result-state" class="result-state">等待生成</span>
+          </div>
+
+          <div id="status-message" class="status-message" role="status" aria-live="polite">选好声音并输入文本后，即可开始生成。</div>
+          <div id="progress-track" class="progress-track" role="progressbar" aria-label="生成进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden>
+            <span id="progress-bar"></span>
+          </div>
+          <div id="audio-region" class="audio-region" hidden>
+            <audio id="audio-player" controls preload="metadata">当前浏览器不支持音频播放。</audio>
+            <a id="download-audio" class="download-button" href="#" download="xiaoxuan-voice.mp3">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14" /></svg>
+              下载 MP3
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <section class="trust-note" aria-label="隐私和服务说明">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8.1 7 10 4.2-1.9 7-5.4 7-10V6l-7-3Z" /><path d="m9 12 2 2 4-4" /></svg>
+        <div>
+          <strong>关于隐私与可用性</strong>
+          <p>文本仅用于本次语音生成，不作为内容存档。音频为临时文件，约 1 小时后自动清理。免费在线语音能力可能受上游服务变化影响，不承诺商业级稳定性。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>小宣 Voice Studio · 为清晰表达而做</footer>
+
+    <script>window.XUAN_VOICE_CONFIG = window.XUAN_VOICE_CONFIG || {};</script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
