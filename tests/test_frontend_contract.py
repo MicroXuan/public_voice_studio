@@ -49,6 +49,15 @@ def test_page_has_brand_semantics_and_no_forbidden_copy():
     assert not re.search(r"[😀-🙏🌀-🫿]", html)
 
 
+def test_page_discloses_unofficial_provider_and_prohibits_abuse():
+    html = HTML_PATH.read_text()
+
+    assert "edge-tts" in html
+    assert "Microsoft Edge 在线语音" in html
+    assert "非官方客户端" in html
+    assert "请勿滥用" in html
+
+
 def test_all_creation_fields_have_explicit_labels_and_required_regions():
     html, parser = parse_contract()
     required_ids = {
