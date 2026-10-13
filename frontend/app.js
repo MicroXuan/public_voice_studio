@@ -46,6 +46,9 @@ const elements = {
   download: document.querySelector("#download-audio"),
   resultCard: document.querySelector("#result-card"),
   turnstile: document.querySelector("#turnstile-container"),
+  contactTrigger: document.querySelector("#contact-trigger"),
+  contactDialog: document.querySelector("#wechat-dialog"),
+  contactClose: document.querySelector("#contact-close"),
 };
 
 const state = {
@@ -363,6 +366,15 @@ function setupTurnstile() {
   document.head.append(script);
 }
 
+function openContactDialog() {
+  elements.contactDialog.showModal();
+  document.body.classList.add("has-open-dialog");
+}
+
+function closeContactDialog() {
+  elements.contactDialog.close();
+}
+
 elements.sourceText.addEventListener("input", updateCharacterCount);
 elements.clearText.addEventListener("click", () => {
   elements.sourceText.value = "";
@@ -405,6 +417,15 @@ elements.resetControls.addEventListener("click", () => {
   }
 });
 elements.generate.addEventListener("click", generateVoice);
+elements.contactTrigger.addEventListener("click", openContactDialog);
+elements.contactClose.addEventListener("click", closeContactDialog);
+elements.contactDialog.addEventListener("click", (event) => {
+  if (event.target === elements.contactDialog) closeContactDialog();
+});
+elements.contactDialog.addEventListener("close", () => {
+  document.body.classList.remove("has-open-dialog");
+  elements.contactTrigger.focus();
+});
 
 updateCharacterCount();
 setupTurnstile();

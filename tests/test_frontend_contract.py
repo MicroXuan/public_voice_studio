@@ -61,6 +61,27 @@ def test_page_uses_supplied_favicon_and_displays_current_free_limits():
     assert "0 / 5,000" in html
 
 
+def test_page_offers_an_accessible_wechat_contact_dialog():
+    html, parser = parse_contract()
+    qr_code = ROOT / "frontend" / "wechat-qr.jpg"
+
+    assert qr_code.is_file()
+    assert "contact-trigger" in parser.ids
+    assert "wechat-dialog" in parser.ids
+    assert "contact-dialog-title" in parser.ids
+    assert "contact-dialog-description" in parser.ids
+    assert "contact-close" in parser.ids
+    assert "dialog" in [tag for tag, _ in parser.tags]
+    assert re.search(
+        r'<dialog[^>]+id="wechat-dialog"[^>]+aria-labelledby="contact-dialog-title"[^>]+aria-describedby="contact-dialog-description"',
+        html,
+    )
+    assert re.search(
+        r'<img[^>]+src="\./wechat-qr\.jpg"[^>]+alt="小宣个人微信二维码"',
+        html,
+    )
+
+
 def test_page_discloses_unofficial_provider_and_prohibits_abuse():
     html = HTML_PATH.read_text()
 

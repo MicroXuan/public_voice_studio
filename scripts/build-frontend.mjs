@@ -6,7 +6,7 @@ import path from "node:path";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = path.join(root, "frontend");
 const output = path.join(root, "dist");
-const publicAssets = ["index.html", "styles.css", "app.js", "lib.js", "favicon.png"];
+const publicAssets = ["index.html", "styles.css", "app.js", "lib.js", "favicon.png", "wechat-qr.jpg"];
 
 function assetVersion(content) {
   return createHash("sha256").update(content).digest("hex").slice(0, 12);
@@ -28,7 +28,7 @@ const turnstileSiteKey = process.env.TURNSTILE_SITE_KEY?.trim() || "";
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await Promise.all(
-  ["styles.css", "lib.js", "favicon.png"].map((name) => copyFile(path.join(source, name), path.join(output, name))),
+  ["styles.css", "lib.js", "favicon.png", "wechat-qr.jpg"].map((name) => copyFile(path.join(source, name), path.join(output, name))),
 );
 
 const template = await readFile(path.join(source, "config.template.js"), "utf8");

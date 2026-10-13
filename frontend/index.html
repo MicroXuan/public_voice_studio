@@ -24,9 +24,15 @@
           <small>Voice Studio</small>
         </span>
       </a>
-      <div class="service-note" aria-label="服务说明">
-        <span class="service-dot" aria-hidden="true"></span>
-        免费体验 · 无需登录
+      <div class="header-actions">
+        <div class="service-note" aria-label="服务说明">
+          <span class="service-dot" aria-hidden="true"></span>
+          免费体验 · 无需登录
+        </div>
+        <button id="contact-trigger" class="contact-trigger" type="button" aria-haspopup="dialog" aria-controls="wechat-dialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.4 5C4.9 5 2 7.4 2 10.3c0 1.7 1 3.2 2.6 4.2l-.7 2.2 2.5-1.3c.6.1 1.3.2 2 .2h.4a6.2 6.2 0 0 1-.3-1.9c0-3.3 3-6 6.8-6h.5C14.7 6.1 11.8 5 8.4 5Z" /><path d="M22 13.7c0-2.7-2.8-4.9-6.2-4.9s-6.2 2.2-6.2 4.9 2.8 4.9 6.2 4.9c.6 0 1.2-.1 1.8-.2l2.3 1.2-.6-2c1.6-.9 2.7-2.3 2.7-3.9Z" /><circle cx="6.4" cy="9.7" r=".7" /><circle cx="10.5" cy="9.7" r=".7" /><circle cx="13.8" cy="13.3" r=".7" /><circle cx="17.7" cy="13.3" r=".7" /></svg>
+          联系我
+        </button>
       </div>
     </header>
 
@@ -177,6 +183,21 @@
     </main>
 
     <footer>小宣 Voice Studio · 为清晰表达而做</footer>
+
+    <dialog id="wechat-dialog" class="contact-dialog" aria-labelledby="contact-dialog-title" aria-describedby="contact-dialog-description">
+      <div class="contact-dialog-card">
+        <button id="contact-close" class="contact-close" type="button" aria-label="关闭微信二维码">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+        <p class="contact-kicker">WECHAT</p>
+        <h2 id="contact-dialog-title">添加小宣微信</h2>
+        <p id="contact-dialog-description">微信扫码，添加我为好友</p>
+        <div class="qr-frame">
+          <img src="./wechat-qr.jpg" alt="小宣个人微信二维码" width="686" height="940" />
+        </div>
+        <p class="contact-hint">在手机上可长按二维码识别</p>
+      </div>
+    </dialog>
 
     <script src="./config.js"></script>
     <script>window.XUAN_VOICE_CONFIG = window.XUAN_VOICE_CONFIG || {};</script>

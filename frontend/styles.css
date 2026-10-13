@@ -120,6 +120,25 @@ button, input, select, textarea, a {
 }
 .service-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-success); box-shadow: 0 0 0 5px rgba(15, 138, 95, 0.1); }
 
+.header-actions { display: flex; align-items: center; gap: 14px; }
+.contact-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(79, 70, 229, .2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .75);
+  color: #4338ca;
+  box-shadow: 0 7px 22px rgba(79, 70, 229, .07);
+  font-size: 13px;
+  font-weight: 700;
+}
+.contact-trigger:hover { border-color: rgba(79, 70, 229, .42); background: #fff; box-shadow: 0 10px 26px rgba(79, 70, 229, .12); }
+.contact-trigger svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+
 .page-shell { width: min(1440px, calc(100% - 48px)); margin: 0 auto; }
 
 .intro {
@@ -325,6 +344,51 @@ audio { width: 100%; min-height: 44px; }
 .trust-note p { margin: 4px 0 0; font-size: 11px; line-height: 1.65; }
 footer { padding: 28px 20px 38px; color: #8490a3; font-size: 11px; text-align: center; }
 
+body.has-open-dialog { overflow: hidden; }
+.contact-dialog {
+  width: min(380px, calc(100% - 28px));
+  max-height: calc(100vh - 28px);
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: var(--color-foreground);
+}
+.contact-dialog::backdrop { background: rgba(15, 23, 42, .48); backdrop-filter: blur(6px); }
+.contact-dialog-card {
+  position: relative;
+  max-height: calc(100vh - 28px);
+  padding: 25px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .98);
+  box-shadow: 0 28px 80px rgba(15, 23, 42, .28);
+  text-align: center;
+}
+.contact-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #64748b;
+}
+.contact-close:hover { background: #f1f3f8; color: var(--color-foreground); }
+.contact-close svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.contact-kicker { margin: 0 0 5px; color: var(--color-primary); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; font-weight: 750; letter-spacing: .16em; }
+.contact-dialog h2 { margin: 0; font-size: 21px; letter-spacing: -.02em; }
+#contact-dialog-description { margin: 6px 0 18px; color: var(--color-muted); font-size: 13px; }
+.qr-frame { padding: 8px; border: 1px solid var(--color-border); border-radius: 17px; background: #fff; }
+.qr-frame img { display: block; width: 100%; height: auto; max-height: min(560px, calc(100vh - 215px)); border-radius: 11px; object-fit: contain; }
+.contact-hint { margin: 14px 0 0; color: #8490a3; font-size: 11px; }
+
 [hidden] { display: none !important; }
 
 @media (max-width: 1024px) {
@@ -358,7 +422,12 @@ footer { padding: 28px 20px 38px; color: #8490a3; font-size: 11px; text-align: c
 @media (max-width: 480px) {
   .site-header, .page-shell { width: min(100% - 16px, 460px); }
   .brand-mark { width: 38px; height: 38px; }
-  .service-note { max-width: 112px; line-height: 1.25; text-align: right; }
+  .header-actions { gap: 6px; }
+  .service-note { max-width: 88px; line-height: 1.2; text-align: right; }
+  .contact-trigger { width: 44px; padding: 0; }
+  .contact-trigger svg { width: 20px; }
+  .contact-trigger { font-size: 0; }
+  .contact-dialog-card { padding: 22px 18px 18px; }
   h1 { font-size: 29px; }
   .limit-note { gap: 18px; }
   .workspace-grid { margin-inline: -2px; }
