@@ -1,5 +1,12 @@
 # 小宣 Voice Studio 部署与运维
 
+## 当前生产环境
+
+- 正式网站：`https://voiceflow.thexuan.com`
+- Cloudflare Pages：`https://xiaoxuan-voice-studio.pages.dev`
+- Render API：`https://xiaoxuan-voice-api.onrender.com`
+- 健康检查：`https://xiaoxuan-voice-api.onrender.com/healthz`
+
 ## 架构
 
 - 前端：Cloudflare Pages，构建后只包含 `index.html`、CSS、浏览器 JavaScript 和公开配置。
@@ -16,7 +23,7 @@
 4. 首次创建时填写 `ALLOWED_ORIGINS`。尚未创建 Pages 时，可先填预期域名与本地开发地址，例如：
 
    ```text
-   https://voice.example.com,http://localhost:5173,http://127.0.0.1:5173
+   https://xiaoxuan-voice-studio.pages.dev,https://voiceflow.thexuan.com,http://localhost:5173,http://127.0.0.1:5173
    ```
 
 5. `IP_HASH_SECRET` 由 Render 自动生成。`TURNSTILE_SECRET_KEY` 可留空；需要防滥用时再填写。
@@ -50,7 +57,8 @@ Render Free 闲置后会休眠，冷启动可能接近 1 分钟。前端会自�
    | Root directory | 仓库根目录 |
 
 4. 在 Pages 的生产环境变量中添加：
-   - `API_BASE_URL`：上一步 Render API 的 HTTPS URL，不带末尾 `/`。
+   - `API_BASE_URL`：`https://xiaoxuan-voice-api.onrender.com`，不带末尾 `/`。
+   - `NODE_VERSION`：`22`。
    - `TURNSTILE_SITE_KEY`：可选的公开站点密钥；未启用时留空。
 5. 部署成功后得到 `*.pages.dev` 地址。回到 Render，把该 Origin 加进 `ALLOWED_ORIGINS` 并重新部署。
 
@@ -60,11 +68,11 @@ Render Free 闲置后会休眠，冷启动可能接近 1 分钟。前端会自�
 
 ### 前端主域名
 
-在 Pages 项目进入 **Custom domains > Set up a domain**，添加例如 `voice.example.com`。如果域名已托管在同一 Cloudflare 账户，DNS 记录会自动引导完成；否则按界面提供的 CNAME 记录配置。
+在 Pages 项目进入 **Custom domains > Set up a domain**，添加 `voiceflow.thexuan.com`。如果域名已托管在同一 Cloudflare 账户，DNS 记录会自动引导完成；否则按界面提供的 CNAME 记录配置。
 
 绑定后：
 
-1. 把 `https://voice.example.com` 加到 Render 的 `ALLOWED_ORIGINS`。
+1. 把 `https://voiceflow.thexuan.com` 加到 Render 的 `ALLOWED_ORIGINS`。
 2. 保留 `*.pages.dev` Origin 直到自定义域名验证完成；确认稳定后可移除。
 3. 重新测试 OPTIONS、语音目录、生成、轮询、试听和下载。
 

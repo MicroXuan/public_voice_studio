@@ -2,6 +2,8 @@
 
 一个面向公众的免费文本转语音工作台。后端使用 FastAPI 与 `edge-tts` 动态读取当前全部在线语音；前端是无框架静态页面，可部署到 Cloudflare Pages。
 
+在线使用：[voiceflow.thexuan.com](https://voiceflow.thexuan.com)
+
 ## 能力
 
 - 动态加载全部在线语音，支持搜索、语言/地区/性别筛选与本地收藏
@@ -41,6 +43,10 @@ API_BASE_URL=http://127.0.0.1:8000 npm run build
 ## 部署
 
 生产架构使用 Render Free 单 worker API 与 Cloudflare Pages 静态前端。免费实例冷启动时，页面会自动重试，不需要用户刷新。完整步骤、环境变量、自定义域名和回滚方式见 [部署文档](docs/deployment.md)。
+
+- 正式网站：`https://voiceflow.thexuan.com`
+- Pages 回源域名：`https://xiaoxuan-voice-studio.pages.dev`
+- API：`https://xiaoxuan-voice-api.onrender.com`
 
 ## 重要说明
 
