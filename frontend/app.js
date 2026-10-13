@@ -1,16 +1,19 @@
 import {
   backoffDelay,
   filterVoices,
+  filterVoicesByRegions,
   formatApiError,
   groupLocales,
   loadFavorites,
   normalizeApiBase,
+  pickDefaultVoice,
   toggleFavorite,
 } from "./lib.js";
 
 const config = window.XUAN_VOICE_CONFIG || {};
 const apiBase = normalizeApiBase(config.apiBase || "", window.location.href);
 const favoriteKey = "xiaoxuan-voice-studio:favorites";
+const publicRegionCodes = ["US", "JP", "CN", "TW", "HK", "KR", "IN", "AR"];
 
 const elements = {
   sourceText: document.querySelector("#source-text"),
@@ -39,6 +42,7 @@ const elements = {
   audioRegion: document.querySelector("#audio-region"),
   audio: document.querySelector("#audio-player"),
   download: document.querySelector("#download-audio"),
+  resultCard: document.querySelector("#result-card"),
   turnstile: document.querySelector("#turnstile-container"),
 };
 
@@ -74,7 +78,7 @@ function fillSelect(select, values, defaultLabel) {
   const current = select.value;
   select.replaceChildren(new Option(defaultLabel, ""));
   for (const item of values) {
-    select.add(new Option(`${item.label} · ${item.count}`, item.code));
+    select.add(new Option(item.label, item.code));
   }
   if ([...select.options].some((option) => option.value === current)) select.value = current;
 }
@@ -186,10 +190,11 @@ async function loadVoices() {
         }
         throw Object.assign(new Error("voice catalog"), { payload: data, status: response.status });
       }
-      state.voices = Array.isArray(data?.voices) ? data.voices : [];
-      if (!state.selectedVoice || !state.voices.some((voice) => voice.short_name === state.selectedVoice)) {
-        state.selectedVoice = state.voices[0]?.short_name || "";
-      }
+      state.voices = filterVoicesByRegions(
+        Array.isArray(data?.voices) ? data.voices : [],
+        publicRegionCodes,
+      );
+      state.selectedVoice = pickDefaultVoice(state.voices, state.selectedVoice);
       renderFilters();
       renderVoiceList();
       setStatus("语音目录已就绪。输入文本后即可开始生成。", "neutral");
@@ -237,6 +242,14 @@ function absoluteApiUrl(path) {
   return new URL(path, `${apiBase}/`).href;
 }
 
+function revealResult() {
+  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  elements.resultCard.scrollIntoView({
+    behavior: reducedMotion ? "auto" : "smooth",
+    block: "nearest",
+  });
+}
+
 async function pollJob(location, sequence, signal) {
   let attempt = 0;
   while (!signal.aborted && sequence === state.pollSequence) {
@@ -259,6 +272,7 @@ async function pollJob(location, sequence, signal) {
       elements.resultState.textContent = "已完成";
       setProgress(100, true);
       setStatus("语音已生成，可以试听或下载 MP3。", "success");
+      window.requestAnimationFrame(revealResult);
       return;
     }
     if (["failed", "expired"].includes(data.state)) {
@@ -290,6 +304,7 @@ async function generateVoice() {
   elements.resultState.textContent = "连接中";
   setStatus("正在连接语音服务。免费实例唤醒时可能需要约 1 分钟。");
   setProgress(2, true);
+  window.requestAnimationFrame(revealResult);
 
   try {
     const response = await fetch(`${apiBase}/api/jobs`, {

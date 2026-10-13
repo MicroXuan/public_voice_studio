@@ -130,3 +130,17 @@ def test_browser_logic_consumes_helpers_config_and_full_job_flow():
     assert "turnstile" in javascript.lower()
     assert "AbortController" in javascript
     assert "localStorage" in javascript
+
+
+def test_public_catalog_dropdowns_and_result_navigation_are_intentional():
+    javascript = JS_PATH.read_text()
+    css = CSS_PATH.read_text()
+
+    assert "filterVoicesByRegions" in javascript
+    for region in ("US", "JP", "CN", "TW", "HK", "KR", "IN", "AR"):
+        assert f'"{region}"' in javascript
+    assert "new Option(item.label, item.code)" in javascript
+    assert "${item.label} · ${item.count}" not in javascript
+    assert "scrollIntoView" in javascript
+    assert "prefers-reduced-motion: reduce" in javascript
+    assert "scroll-margin-top" in css

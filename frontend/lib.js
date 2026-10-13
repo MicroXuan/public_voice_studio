@@ -68,6 +68,21 @@ export function filterVoices(voices, filters = {}) {
     .map(({ voice }) => voice);
 }
 
+export function filterVoicesByRegions(voices, allowedRegions) {
+  const allowed = new Set(
+    [...(allowedRegions || [])]
+      .map((region) => String(region).toUpperCase())
+      .filter(Boolean),
+  );
+  return voices.filter((voice) => allowed.has(localeParts(voice.locale).region));
+}
+
+export function pickDefaultVoice(voices, current, preferred = "zh-CN-XiaoxiaoNeural") {
+  if (voices.some((voice) => voice.short_name === current)) return current;
+  if (voices.some((voice) => voice.short_name === preferred)) return preferred;
+  return voices[0]?.short_name || "";
+}
+
 function displayName(type, code, displayLocale) {
   try {
     return new Intl.DisplayNames([displayLocale], { type }).of(code) || code;

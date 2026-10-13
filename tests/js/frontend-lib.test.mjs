@@ -4,10 +4,12 @@ import test from "node:test";
 import {
   backoffDelay,
   filterVoices,
+  filterVoicesByRegions,
   formatApiError,
   groupLocales,
   loadFavorites,
   normalizeApiBase,
+  pickDefaultVoice,
   toggleFavorite,
 } from "../../frontend/lib.js";
 
@@ -67,6 +69,35 @@ test("filters language region and gender while sorting favorites first stably", 
     filterVoices(repeated, { region: "US" }).map((voice) => voice.short_name),
     ["en-US-GuyNeural"],
   );
+});
+
+test("limits the public catalog to the selected eight regions without mutation", () => {
+  const catalog = [
+    ...voices,
+    { ...voices[2], short_name: "ja-JP-NanamiNeural", locale: "ja-JP" },
+    { ...voices[2], short_name: "zh-TW-HsiaoChenNeural", locale: "zh-TW" },
+    { ...voices[2], short_name: "zh-HK-HiuGaaiNeural", locale: "zh-HK" },
+    { ...voices[2], short_name: "ko-KR-SunHiNeural", locale: "ko-KR" },
+    { ...voices[2], short_name: "hi-IN-SwaraNeural", locale: "hi-IN" },
+    { ...voices[2], short_name: "es-AR-ElenaNeural", locale: "es-AR" },
+    { ...voices[2], short_name: "en-GB-SoniaNeural", locale: "en-GB" },
+    { ...voices[2], short_name: "missing-region", locale: "en" },
+  ];
+  const snapshot = structuredClone(catalog);
+  const result = filterVoicesByRegions(catalog, ["US", "JP", "CN", "TW", "HK", "KR", "IN", "AR"]);
+
+  assert.deepEqual(
+    result.map((voice) => voice.locale),
+    ["zh-CN", "en-US", "ja-JP", "zh-TW", "zh-HK", "ko-KR", "hi-IN", "es-AR"],
+  );
+  assert.deepEqual(catalog, snapshot);
+});
+
+test("keeps a valid selection and otherwise prefers the reliable Chinese default", () => {
+  assert.equal(pickDefaultVoice(voices, "en-US-GuyNeural"), "en-US-GuyNeural");
+  assert.equal(pickDefaultVoice(voices, "missing"), "zh-CN-XiaoxiaoNeural");
+  assert.equal(pickDefaultVoice([voices[0]], ""), "fr-FR-DeniseNeural");
+  assert.equal(pickDefaultVoice([], ""), "");
 });
 
 test("handles hundreds of voices, long names and empty results without mutation", () => {
