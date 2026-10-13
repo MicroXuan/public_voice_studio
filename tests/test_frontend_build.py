@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -66,3 +67,10 @@ def test_build_copies_only_public_assets_and_preserves_sources():
     assert "must-never-be-emitted" not in combined
     assert "also-never-public" not in combined
     assert "process.env" not in combined
+
+    index = (DIST / "index.html").read_text()
+    app = (DIST / "app.js").read_text()
+    assert re.search(r'\./styles\.css\?v=[0-9a-f]{12}', index)
+    assert re.search(r'\./config\.js\?v=[0-9a-f]{12}', index)
+    assert re.search(r'\./app\.js\?v=[0-9a-f]{12}', index)
+    assert re.search(r'from "\./lib\.js\?v=[0-9a-f]{12}"', app)
