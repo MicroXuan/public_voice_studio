@@ -109,8 +109,11 @@ def test_styles_define_tokens_accessible_targets_breakpoints_and_motion():
 
 
 def test_browser_logic_consumes_helpers_config_and_full_job_flow():
+    html = HTML_PATH.read_text()
     javascript = JS_PATH.read_text()
 
+    assert '<script src="./config.js"></script>' in html
+    assert html.index('<script src="./config.js"></script>') < html.index('src="./app.js"')
     assert "window.XUAN_VOICE_CONFIG" in javascript
     assert "filterVoices" in javascript
     assert 'fetch(`${apiBase}/api/voices`' in javascript

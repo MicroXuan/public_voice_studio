@@ -34,10 +34,15 @@ def _read(item: dict[str, object], *names: str) -> str:
 
 
 def _normalize(item: dict[str, object]) -> VoiceOption:
+    short_name = _read(item, "ShortName", "short_name")
+    try:
+        local_name = _read(item, "LocalName", "local_name")
+    except ValueError:
+        local_name = short_name.rsplit("-", 1)[-1].removesuffix("Neural") or short_name
     return VoiceOption(
-        short_name=_read(item, "ShortName", "short_name"),
+        short_name=short_name,
         friendly_name=_read(item, "FriendlyName", "friendly_name"),
-        local_name=_read(item, "LocalName", "local_name"),
+        local_name=local_name,
         locale=_read(item, "Locale", "locale"),
         gender=_read(item, "Gender", "gender"),
     )

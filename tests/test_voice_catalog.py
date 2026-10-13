@@ -94,6 +94,25 @@ async def test_catalog_accepts_snake_case_key_variants_and_gets_by_short_name():
 
 
 @pytest.mark.asyncio
+async def test_current_edge_shape_without_local_name_uses_readable_short_name():
+    provider = FakeProvider(
+        [
+            {
+                "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoNeural)",
+                "ShortName": "zh-CN-XiaoxiaoNeural",
+                "FriendlyName": "Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)",
+                "Locale": "zh-CN",
+                "Gender": "Female",
+            }
+        ]
+    )
+
+    voices = await VoiceCatalog(provider).list()
+
+    assert voices[0].local_name == "Xiaoxiao"
+
+
+@pytest.mark.asyncio
 async def test_edge_provider_delegates_to_edge_tts(monkeypatch):
     calls = 0
 
