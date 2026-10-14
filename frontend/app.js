@@ -8,6 +8,7 @@ import {
   normalizeApiBase,
   pickDefaultVoice,
   pickSelectValue,
+  replaceAudioSource,
   toggleFavorite,
   voiceDisplayName,
 } from "./lib.js";
@@ -238,8 +239,7 @@ function updateControlOutput(input, output, suffix) {
 }
 
 function resetResult() {
-  elements.audio.pause();
-  elements.audio.removeAttribute("src");
+  replaceAudioSource(elements.audio);
   elements.audioRegion.hidden = true;
   setProgress(0, false);
   elements.resultState.textContent = "等待生成";
@@ -273,7 +273,7 @@ async function pollJob(location, sequence, signal) {
 
     if (data.state === "completed") {
       const audioUrl = absoluteApiUrl(data.audio_url);
-      elements.audio.src = audioUrl;
+      replaceAudioSource(elements.audio, audioUrl);
       elements.download.href = absoluteApiUrl(data.download_url || `${data.audio_url}?download=1`);
       elements.audioRegion.hidden = false;
       elements.resultState.textContent = "已完成";

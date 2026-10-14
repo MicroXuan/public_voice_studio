@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import {
+import * as frontendLib from "../../frontend/lib.js";
+
+const {
   backoffDelay,
   filterVoices,
   filterVoicesByRegions,
@@ -13,7 +15,8 @@ import {
   pickSelectValue,
   toggleFavorite,
   voiceDisplayName,
-} from "../../frontend/lib.js";
+  replaceAudioSource,
+} = frontendLib;
 
 const voices = [
   {
@@ -173,4 +176,36 @@ test("cold-start backoff grows exponentially and is capped", () => {
     [0, 1, 2, 3, 4, 8].map((attempt) => backoffDelay(attempt, { base: 1_000, cap: 12_000 })),
     [1_000, 2_000, 4_000, 8_000, 12_000, 12_000],
   );
+});
+
+test("replacing audio clears stale playback state before loading the next source", () => {
+  const calls = [];
+  const audio = {
+    src: "https://api.example.com/old.mp3",
+    currentTime: 18,
+    displayedDuration: 23,
+    pause() {
+      calls.push("pause");
+    },
+    removeAttribute(name) {
+      calls.push(`remove:${name}`);
+      if (name === "src") this.src = "";
+    },
+    load() {
+      calls.push(`load:${this.src}`);
+      this.currentTime = 0;
+      this.displayedDuration = null;
+    },
+  };
+
+  assert.equal(typeof replaceAudioSource, "function");
+  replaceAudioSource(audio, "https://api.example.com/new.mp3");
+
+  assert.equal(audio.currentTime, 0);
+  assert.equal(audio.displayedDuration, null);
+  assert.deepEqual(calls, [
+    "pause",
+    "remove:src",
+    "load:https://api.example.com/new.mp3",
+  ]);
 });

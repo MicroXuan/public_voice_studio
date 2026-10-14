@@ -170,3 +170,10 @@ export function backoffDelay(attempt, { base = 1_000, cap = 15_000 } = {}) {
   const exponent = Math.max(0, Math.floor(Number(attempt) || 0));
   return Math.min(cap, base * 2 ** exponent);
 }
+
+export function replaceAudioSource(audio, source = "") {
+  audio.pause();
+  audio.removeAttribute("src");
+  if (source) audio.src = source;
+  audio.load();
+}
