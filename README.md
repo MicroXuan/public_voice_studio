@@ -48,6 +48,10 @@ API_BASE_URL=http://127.0.0.1:8000 npm run build
 - Pages 回源域名：`https://xiaoxuan-voice-studio.pages.dev`
 - API：`https://xiaoxuan-voice-api.onrender.com`
 
+## edge-tts 版本检查
+
+Dependabot 会在工作日每天 09:00（北京时间）检查 `edge-tts` 新版本。发现更新后，它会创建 Pull Request 并自动指派给 GitHub 用户 `MicroXuan`。GitHub Actions 会运行后端测试、前端测试、生产构建和真实语音合成冒烟测试；测试通过并人工合并后，Render 会自动部署新版。
+
 ## 重要说明
 
 本项目依赖非官方的免费在线语音接口，适合首阶段免费、非关键业务使用，不承诺商业级 SLA。若未来加入付费或商业服务，应把 `SpeechSynthesizer` 接口替换为有正式授权与 SLA 的语音供应商，并迁移到持久化额度和任务存储。

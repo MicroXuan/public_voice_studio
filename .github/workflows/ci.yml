@@ -1,0 +1,62 @@
+name: Dependency compatibility
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-compatibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run backend tests
+        run: python -m pytest -q
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run frontend tests
+        run: npm test
+
+      - name: Build frontend
+        env:
+          API_BASE_URL: https://xiaoxuan-voice-api.onrender.com
+        run: npm run build
+
+      - name: Verify live edge-tts synthesis
+        if: github.actor == 'dependabot[bot]' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          smoke_file="$(mktemp)"
+          edge-tts \
+            --voice zh-CN-XiaoxiaoNeural \
+            --text "小宣语音兼容性测试。" \
+            --write-media "$smoke_file"
+          test "$(wc -c < "$smoke_file")" -gt 1000
+          rm -f "$smoke_file"
+
