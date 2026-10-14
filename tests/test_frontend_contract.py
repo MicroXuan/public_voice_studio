@@ -115,26 +115,6 @@ def test_all_creation_fields_have_explicit_labels_and_required_regions():
     assert "aria-live=\"polite\"" in html or 'aria-live="polite"' in html
 
 
-def test_result_uses_accessible_custom_audio_controls():
-    html, parser = parse_contract()
-    required_ids = {
-        "audio-player",
-        "audio-toggle",
-        "audio-seek",
-        "audio-current-time",
-        "audio-duration",
-        "audio-mute",
-        "audio-volume",
-    }
-
-    assert required_ids <= parser.ids
-    audio_attrs = next(attrs for tag, attrs in parser.tags if tag == "audio")
-    assert "controls" not in audio_attrs
-    assert "hidden" in audio_attrs
-    assert re.search(r'<input[^>]+id="audio-seek"[^>]+aria-label="播放进度"', html)
-    assert re.search(r'<input[^>]+id="audio-volume"[^>]+aria-label="音量"', html)
-
-
 def test_inputs_do_not_depend_on_placeholders_for_their_names():
     _, parser = parse_contract()
     fields = [

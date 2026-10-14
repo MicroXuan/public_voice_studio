@@ -177,23 +177,3 @@ export function replaceAudioSource(audio, source = "") {
   if (source) audio.src = source;
   audio.load();
 }
-
-export function formatPlaybackTime(value) {
-  const totalSeconds = Number.isFinite(Number(value))
-    ? Math.max(0, Math.floor(Number(value)))
-    : 0;
-  const hours = Math.floor(totalSeconds / 3_600);
-  const minutes = Math.floor((totalSeconds % 3_600) / 60);
-  const seconds = totalSeconds % 60;
-  if (hours > 0) {
-    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  }
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
-}
-
-export function playbackPercent(currentTime, duration) {
-  const current = Number(currentTime);
-  const total = Number(duration);
-  if (!Number.isFinite(current) || !Number.isFinite(total) || total <= 0) return 0;
-  return Math.max(0, Math.min(100, (current / total) * 100));
-}

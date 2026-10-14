@@ -2,14 +2,12 @@ import {
   backoffDelay,
   filterVoices,
   filterVoicesByRegions,
-  formatPlaybackTime,
   formatApiError,
   groupLocales,
   loadFavorites,
   normalizeApiBase,
   pickDefaultVoice,
   pickSelectValue,
-  playbackPercent,
   replaceAudioSource,
   toggleFavorite,
   voiceDisplayName,
@@ -46,12 +44,6 @@ const elements = {
   progressBar: document.querySelector("#progress-bar"),
   audioRegion: document.querySelector("#audio-region"),
   audio: document.querySelector("#audio-player"),
-  audioToggle: document.querySelector("#audio-toggle"),
-  audioSeek: document.querySelector("#audio-seek"),
-  audioCurrentTime: document.querySelector("#audio-current-time"),
-  audioDuration: document.querySelector("#audio-duration"),
-  audioMute: document.querySelector("#audio-mute"),
-  audioVolume: document.querySelector("#audio-volume"),
   download: document.querySelector("#download-audio"),
   resultCard: document.querySelector("#result-card"),
   turnstile: document.querySelector("#turnstile-container"),
@@ -246,38 +238,8 @@ function updateControlOutput(input, output, suffix) {
   output.textContent = `${value > 0 ? "+" : ""}${value}${suffix}`;
 }
 
-function updateAudioTimeline() {
-  const hasSource = elements.audio.hasAttribute("src");
-  const duration = Number.isFinite(elements.audio.duration) ? elements.audio.duration : 0;
-  const currentTime = duration > 0
-    ? Math.max(0, Math.min(duration, elements.audio.currentTime || 0))
-    : 0;
-  const playing = hasSource && !elements.audio.paused && !elements.audio.ended;
-  elements.audioToggle.disabled = !hasSource;
-  elements.audioToggle.dataset.playing = String(playing);
-  elements.audioToggle.setAttribute("aria-label", playing ? "暂停" : "播放");
-  elements.audioSeek.disabled = duration <= 0;
-  elements.audioSeek.max = String(duration);
-  elements.audioSeek.value = String(currentTime);
-  elements.audioSeek.style.setProperty(
-    "--audio-range-progress",
-    `${playbackPercent(currentTime, duration)}%`,
-  );
-  elements.audioCurrentTime.textContent = formatPlaybackTime(currentTime);
-  elements.audioDuration.textContent = formatPlaybackTime(duration);
-}
-
-function updateAudioVolume() {
-  const volume = elements.audio.muted ? 0 : elements.audio.volume;
-  elements.audioMute.setAttribute("aria-pressed", String(elements.audio.muted || volume === 0));
-  elements.audioMute.setAttribute("aria-label", elements.audio.muted || volume === 0 ? "取消静音" : "静音");
-  elements.audioVolume.value = String(volume);
-  elements.audioVolume.style.setProperty("--audio-range-progress", `${volume * 100}%`);
-}
-
 function resetResult() {
   replaceAudioSource(elements.audio);
-  updateAudioTimeline();
   elements.audioRegion.hidden = true;
   setProgress(0, false);
   elements.resultState.textContent = "等待生成";
@@ -312,7 +274,6 @@ async function pollJob(location, sequence, signal) {
     if (data.state === "completed") {
       const audioUrl = absoluteApiUrl(data.audio_url);
       replaceAudioSource(elements.audio, audioUrl);
-      updateAudioTimeline();
       elements.download.href = absoluteApiUrl(data.download_url || `${data.audio_url}?download=1`);
       elements.audioRegion.hidden = false;
       elements.resultState.textContent = "已完成";
@@ -456,38 +417,6 @@ elements.resetControls.addEventListener("click", () => {
   }
 });
 elements.generate.addEventListener("click", generateVoice);
-elements.audioToggle.addEventListener("click", async () => {
-  if (!elements.audio.hasAttribute("src")) return;
-  if (!elements.audio.paused && !elements.audio.ended) {
-    elements.audio.pause();
-    return;
-  }
-  if (elements.audio.ended) elements.audio.currentTime = 0;
-  try {
-    await elements.audio.play();
-  } catch {
-    setStatus("音频暂时无法播放，请重试或下载 MP3。", "error");
-  }
-});
-elements.audioSeek.addEventListener("input", () => {
-  const nextTime = Number(elements.audioSeek.value);
-  if (Number.isFinite(elements.audio.duration) && Number.isFinite(nextTime)) {
-    elements.audio.currentTime = Math.max(0, Math.min(elements.audio.duration, nextTime));
-    updateAudioTimeline();
-  }
-});
-elements.audioMute.addEventListener("click", () => {
-  elements.audio.muted = !elements.audio.muted;
-});
-elements.audioVolume.addEventListener("input", () => {
-  const volume = Math.max(0, Math.min(1, Number(elements.audioVolume.value) || 0));
-  elements.audio.volume = volume;
-  elements.audio.muted = volume === 0;
-});
-["loadedmetadata", "durationchange", "timeupdate", "play", "pause", "ended", "emptied"].forEach((eventName) => {
-  elements.audio.addEventListener(eventName, updateAudioTimeline);
-});
-elements.audio.addEventListener("volumechange", updateAudioVolume);
 elements.contactTrigger.addEventListener("click", openContactDialog);
 elements.contactClose.addEventListener("click", closeContactDialog);
 elements.contactDialog.addEventListener("click", (event) => {
@@ -499,7 +428,5 @@ elements.contactDialog.addEventListener("close", () => {
 });
 
 updateCharacterCount();
-updateAudioTimeline();
-updateAudioVolume();
 setupTurnstile();
 loadVoices();
