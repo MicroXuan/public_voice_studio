@@ -111,3 +111,10 @@ def test_runtime_and_dependency_files_have_no_azure_integration():
     offenders = [str(path.relative_to(root)) for path in files if "azure" in path.read_text().lower()]
 
     assert offenders == []
+
+
+def test_edge_tts_dependency_is_pinned_to_verified_release():
+    root = Path(__file__).parents[1]
+    requirements = (root / "requirements.txt").read_text().splitlines()
+
+    assert "edge-tts==7.3.1" in requirements
