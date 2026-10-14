@@ -333,7 +333,83 @@ input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0 0; accent-col
 .progress-track { height: 7px; margin-top: 14px; overflow: hidden; border-radius: 999px; background: #e8eaf2; }
 .progress-track span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #4f46e5, #7c6cf5); transition: width 220ms cubic-bezier(.2,.8,.2,1); }
 .audio-region { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; margin-top: 14px; }
-audio { width: 100%; min-height: 44px; }
+.custom-audio-player {
+  display: grid;
+  grid-template-columns: auto auto minmax(100px, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 6px 12px 6px 7px;
+  border: 1px solid #e4e7ef;
+  border-radius: 16px;
+  background: #f5f6f8;
+}
+.audio-toggle, .audio-mute {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 0;
+  color: #273449;
+}
+.audio-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(51, 65, 85, .1);
+}
+.audio-toggle:hover:not(:disabled) { color: var(--color-primary); transform: translateY(-1px); }
+.audio-toggle:disabled { cursor: not-allowed; opacity: .42; }
+.audio-toggle svg { width: 19px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.audio-toggle .play-icon { fill: currentColor; stroke: none; }
+.audio-toggle .pause-icon { display: none; }
+.audio-toggle[data-playing="true"] .play-icon { display: none; }
+.audio-toggle[data-playing="true"] .pause-icon { display: block; }
+.audio-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 76px;
+  color: #475569;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.audio-seek, .audio-volume {
+  --audio-range-progress: 0%;
+  height: 4px;
+  margin: 0;
+  appearance: none;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-primary) 0 var(--audio-range-progress), #cfd4df var(--audio-range-progress) 100%);
+}
+.audio-seek { width: 100%; min-width: 100px; }
+.audio-volume { width: 68px; }
+.audio-seek::-webkit-slider-thumb, .audio-volume::-webkit-slider-thumb {
+  width: 13px;
+  height: 13px;
+  appearance: none;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 1px 5px rgba(51, 65, 85, .28);
+}
+.audio-seek::-moz-range-thumb, .audio-volume::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 1px 5px rgba(51, 65, 85, .28);
+}
+.audio-seek:disabled { cursor: not-allowed; opacity: .55; }
+.audio-volume-control { display: flex; align-items: center; gap: 6px; }
+.audio-mute { width: 32px; height: 32px; border-radius: 9px; background: transparent; }
+.audio-mute:hover { color: var(--color-primary); background: #fff; }
+.audio-mute svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.audio-mute .volume-off-icon { display: none; }
+.audio-mute[aria-pressed="true"] .volume-on-icon { display: none; }
+.audio-mute[aria-pressed="true"] .volume-off-icon { display: block; }
 .download-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid #cdd3e0; border-radius: 11px; color: #334155; font-size: 13px; font-weight: 700; text-decoration: none; }
 .download-button:hover { border-color: var(--color-primary); color: var(--color-primary); background: #f7f7ff; }
 .download-button svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
@@ -437,6 +513,9 @@ body.has-open-dialog { overflow: hidden; }
   .editor-meta { align-items: flex-end; }
   .editor-meta span { max-width: 210px; }
   .audio-region { grid-template-columns: 1fr; }
+  .custom-audio-player { grid-template-columns: auto auto minmax(80px, 1fr) auto; gap: 8px; padding-right: 8px; }
+  .audio-volume { display: none; }
+  .audio-time { min-width: 72px; font-size: 11px; }
   .download-button { width: 100%; }
   .trust-note { padding-inline: 8px; }
 }

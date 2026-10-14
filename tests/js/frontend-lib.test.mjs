@@ -7,6 +7,7 @@ const {
   backoffDelay,
   filterVoices,
   filterVoicesByRegions,
+  formatPlaybackTime,
   formatApiError,
   groupLocales,
   loadFavorites,
@@ -16,6 +17,7 @@ const {
   toggleFavorite,
   voiceDisplayName,
   replaceAudioSource,
+  playbackPercent,
 } = frontendLib;
 
 const voices = [
@@ -208,4 +210,17 @@ test("replacing audio clears stale playback state before loading the next source
     "remove:src",
     "load:https://api.example.com/new.mp3",
   ]);
+});
+
+test("playback time and progress stay finite and clamped", () => {
+  assert.equal(typeof formatPlaybackTime, "function");
+  assert.equal(typeof playbackPercent, "function");
+  assert.equal(formatPlaybackTime(0), "0:00");
+  assert.equal(formatPlaybackTime(65.9), "1:05");
+  assert.equal(formatPlaybackTime(Number.NaN), "0:00");
+  assert.equal(formatPlaybackTime(3_723), "1:02:03");
+  assert.equal(playbackPercent(15, 60), 25);
+  assert.equal(playbackPercent(80, 60), 100);
+  assert.equal(playbackPercent(10, 0), 0);
+  assert.equal(playbackPercent(Number.NaN, 20), 0);
 });

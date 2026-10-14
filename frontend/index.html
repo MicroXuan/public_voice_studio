@@ -164,7 +164,24 @@
             <span id="progress-bar"></span>
           </div>
           <div id="audio-region" class="audio-region" hidden>
-            <audio id="audio-player" controls preload="metadata">当前浏览器不支持音频播放。</audio>
+            <audio id="audio-player" preload="auto" hidden>当前浏览器不支持音频播放。</audio>
+            <div class="custom-audio-player" aria-label="音频播放器">
+              <button id="audio-toggle" class="audio-toggle" type="button" aria-label="播放" data-playing="false" disabled>
+                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z" /></svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10" /></svg>
+              </button>
+              <div class="audio-time" aria-live="off">
+                <span id="audio-current-time">0:00</span><span aria-hidden="true">/</span><span id="audio-duration">0:00</span>
+              </div>
+              <input id="audio-seek" class="audio-seek" type="range" min="0" max="0" step="0.01" value="0" aria-label="播放进度" disabled />
+              <div class="audio-volume-control">
+                <button id="audio-mute" class="audio-mute" type="button" aria-label="静音" aria-pressed="false">
+                  <svg class="volume-on-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 10v4h4l4 4V6L9 10H5Z" /><path d="M16 9c1 .8 1.5 1.8 1.5 3S17 14.2 16 15M18.5 6.5a7.6 7.6 0 0 1 0 11" /></svg>
+                  <svg class="volume-off-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 10v4h4l4 4V6L9 10H5Z" /><path d="m17 9 4 6M21 9l-4 6" /></svg>
+                </button>
+                <input id="audio-volume" class="audio-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="音量" />
+              </div>
+            </div>
             <a id="download-audio" class="download-button" href="#" download="xiaoxuan-voice.mp3">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14" /></svg>
               下载 MP3
